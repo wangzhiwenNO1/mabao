@@ -73,7 +73,7 @@
 			changeStatus() {
 			   if(this.value=="G"||this.value=="R"){
 				   uni.navigateTo({
-				   					url:'FillIn_pregnant'
+				   					url:'FillIn_pregnant?state='+this.value
 				   				})
 			   }
                if(this.value=="C"){

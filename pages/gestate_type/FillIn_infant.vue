@@ -59,6 +59,7 @@
 				return `${year}-${month}-${day}`;
 			},
 			addEntity() {
+				
 				var data = {};
 				data.name = this.name;
 				data.birthday = this.birthday;
@@ -76,6 +77,7 @@
 					this.$U.Toast("请输入婴儿体重")
 					return;
 				}
+			
 				this.$H.post('/gravidawiki/childInfo/addEntity', data, {
 					token: true,
 					header: {
@@ -83,12 +85,26 @@
 					},
 				}).then(res => {
 					if (res.code == 1) {
-						this.$U.Success("保存成功",function(){
-							console.log("ddddd")
-							uni.switchTab({
-									url: '../index/index'
+							// 更改孕育状态
+							this.$H.post('/gravidawiki/gravidaInfo/updateStatus',{
+								newstatus:'G'
+							},{
+								token: true,
+								header: {
+									"content-type": "application/json"
+								},
+							}).then(res=>{
+								console.log(res);
+								if(res.code==1){
+									this.$U.Success('切换成功',()=>{
+										uni.switchTab({
+												url: '../index/index'
+										})
+									})
+								}else{
+									this.$U.Toast(res.message);
+								}
 							})
-						})
 					} else {
 						this.$U.Toast(res.message);
 					}
