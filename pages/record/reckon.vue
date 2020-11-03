@@ -11,7 +11,7 @@
 			<view class="tigs">你还没有开始数胎动哦，本孕周数胎动情况</view>
 		</view>
 		<view class="numBox">
-			<view v-for="item in 6" :key="item" @click="addEntity(item)">{{item}}</view>
+			<view v-for="(item,index) in 6" :key="index" @click="addEntity(item)">{{item}}</view>
 		</view>
 		<view class="btnBox">
 			<view class="startBtn" @click="startTime">

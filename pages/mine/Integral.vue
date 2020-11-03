@@ -7,7 +7,7 @@
 		<view class="integral_box">
 			<view class="title_box">积分明细</view>
 			<view class="list_box">
-				<view class="item_box border-b" v-for="(item,index) in 6">
+				<view class="item_box border-b" v-for="(item,index) in 6" :key="index">
 					<view class="item_left">
 						<view class="item_icon">
 
@@ -32,6 +32,26 @@
 			return {
 
 			};
+		},
+		mounted() {
+			this.getMyScoreDetail();
+		},
+		methods:{
+			getMyScoreDetail(){
+				// 我的积分明细
+				this.$H.post('/member/userScore/getMyScoreDetail', {e:0}, {
+					token: true,
+					header:{
+						'Content-Type':"application/json;charset=utf-8"
+					},
+					
+				}).then(res => {
+					console.log('我的积分明细', res);
+					if (res.code == 1) {
+						
+					}
+				})
+			},
 		}
 	}
 </script>

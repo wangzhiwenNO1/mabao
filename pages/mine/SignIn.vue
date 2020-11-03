@@ -1,3 +1,4 @@
+<!-- 签到页面 -->
 <template>
 	<view>
 		<view class="top_box">
@@ -14,7 +15,8 @@
 					<view class="switch_box">
 						<view>签到提醒</view>
 						<view>
-							<switch color="#FF75A9" checked="true" @change="" style="transform:scale(0.7)" />
+							<!-- @change="" -->
+							<switch color="#FF75A9" checked="true"  style="transform:scale(0.7)" />
 						</view>
 					</view>
 				</view>
@@ -27,9 +29,7 @@
 					</block>
 
 				</view>
-				<view class="signin_btn" @click="SignIn">
-					签到领奖励
-				</view>
+				<view class="signin_btn" @click="SignIn">签到领奖励</view>
 			</view>
 			<view class="middle_three">
 				<image src="../../static/img/signin2.png" mode=""></image>
@@ -66,6 +66,7 @@
 	export default {
 		data() {
 			return {
+				ListData:[],
 				SignInList: [{
 						week: "周一",
 						gold: 2,
@@ -104,6 +105,9 @@
 				]
 			};
 		},
+		mounted() {
+			this.getSignInList();
+		},
 		methods:{
 			SignIn(){
 				var week= new Array("周日", "周一", "周二", "周三", "周四", "周五", "周六");  
@@ -114,7 +118,31 @@
 						this.SignInList[i].IsSignin=true;
 					}
 				}
-			}
+				// 会员签到
+				this.$H.post('/member/userSignIn/addEntity', {e:0}, {
+					token: true,
+					header:{
+						'Content-Type':"application/json;charset=utf-8"
+					},
+					
+				}).then(res => {
+					console.log('会员签到', res);
+					if (res.code == 1) {
+						
+					}
+				})
+			},
+			// 获取我的签到记录
+			getSignInList(){
+				this.$H.get('/member/userSignIn/getMySignIn', {}, {
+					token: true
+				}).then(res => {
+					console.log('获取我的签到记录', res);
+					if (res.code == 1) {
+						this.ListData=res.data;
+					}
+				})
+			},
 		}
 	}
 </script>
