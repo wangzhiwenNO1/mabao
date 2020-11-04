@@ -1,17 +1,15 @@
 <template>
 	<view>
 		<view class="list_box">
-			<view class="item_box border-b">
+			<view class="item_box border-b" v-for="(item,index) in 2" :key="index">
 				<view class="item_top">
-					<view class="item_name">
-						王智
-					</view>
-					<view class="item_phone">15565055031</view>
-					<view class="item_home">家</view>
+					<view class="item_name">{{item}}</view>
+					<view class="item_phone">{{item.tel}}</view>
+					<!-- <view class="item_home">家</view> -->
 				</view>
 				<view class="item_bottom">
 					<view class="item_map">
-						安徽合肥石合肥经济技术开发区 刘镇羽绒街附近
+						{{item.addr}}
 					</view>
 					<view class="item_icon"></view>
 				</view>
@@ -25,8 +23,26 @@
 	export default {
 		data() {
 			return {
-
+				siteList:[]
 			};
+		},
+		mounted() {
+			this.getMyShippingAddr();
+		},
+		methods:{
+			getMyShippingAddr(){
+				// 我的收货地址
+				this.$H.post('/member/userShippingAddr/getMyShippingAddr', {}, {
+					token: true,
+					
+				}).then(res => {
+					console.log('我的收货地址', res);
+					if (res.code == 1) {
+						this.siteList=res.data;
+					}
+				})
+			},
+			
 		}
 	}
 </script>

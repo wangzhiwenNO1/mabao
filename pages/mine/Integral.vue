@@ -6,22 +6,25 @@
 		</view>
 		<view class="integral_box">
 			<view class="title_box">积分明细</view>
-			<view class="list_box">
-				<view class="item_box border-b" v-for="(item,index) in 6" :key="index">
+			<view class="list_box"  v-if="dataList.length>0">
+				
+				<view class="item_box border-b" v-for="(item,index) in dataList" :key="index">
 					<view class="item_left">
 						<view class="item_icon">
 
 						</view>
 						<view class="item_text">
-							完成下单
+							{{item.description}}
 						</view>
 					</view>
 
 					<view class="item_right">
-						+14
+						{{item.score}}
 					</view>
 				</view>
+				
 			</view>
+			<view class="nihility" v-else>暂无明细</view>
 		</view>
 	</view>
 </template>
@@ -30,7 +33,7 @@
 	export default {
 		data() {
 			return {
-
+				dataList:[],
 			};
 		},
 		mounted() {
@@ -48,7 +51,7 @@
 				}).then(res => {
 					console.log('我的积分明细', res);
 					if (res.code == 1) {
-						
+						this.dataList=res.data;
 					}
 				})
 			},
@@ -96,6 +99,10 @@
 			line-height: 90rpx;
 			padding: 0 24rpx;
 			font-weight: bold;
+		}
+		.nihility{
+			text-align: center;
+			margin-top: 20rpx;
 		}
 		.list_box{
 			padding: 0 24rpx;

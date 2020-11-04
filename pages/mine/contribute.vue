@@ -4,17 +4,17 @@
 		<form>
 			<view class="cu-form-group">
 				<view class="title">来源</view>
-				<input placeholder="请输入作者链接或者作者名字" name="input"></input>
+				<input placeholder="请输入作者链接或者作者名字" v-model="source" name="source"></input>
 			</view>
 			
 			<view class="cu-form-group margin-top">
 				<view class="title">标题</view>
-				<input placeholder="请输入标题" name="input"></input>
+				<input placeholder="请输入标题" v-model="title" name="title"></input>
 			</view>
 			
 			<!-- !!!!! placeholder 在ios表现有偏移 建议使用 第一种样式 -->
 			<view class="cu-form-group textareaBox margin-top">
-				<textarea maxlength="-1" :disabled="modalName!=null" @input="textareaAInput" placeholder="请输入你要写的内容…"></textarea>
+				<textarea maxlength="-1" name="content" v-model="content" :disabled="modalName!=null" @input="textareaAInput" placeholder="请输入你要写的内容…"></textarea>
 			</view>
 			
 			
@@ -44,7 +44,7 @@
 				<radio class='radioItem' :class="radio=='C'?'checked':''" :checked="radio=='C'?true:false" value="C"></radio>
 				<view>同意<text @click="goStatement">《用户责任须知》</text></view>
 			</view>
-			<view class="btn">提交</view>
+			<view class="btn" @tap="refer">提交</view>
 			
 			
 		</form>
@@ -59,7 +59,12 @@
 				imgList: [],
 				modalName: null,
 				textareaAValue: '',
-				radio:""
+				radio:"",
+				
+				content:"",
+				title:"",
+				source:"",
+				
 			};
 		},
 		methods: {
@@ -93,10 +98,10 @@
 			},
 			DelImg(e) {
 				uni.showModal({
-					title: '召唤师',
-					content: '确定要删除这段回忆吗？',
-					cancelText: '再看看',
-					confirmText: '再见',
+					title: '提示',
+					content: '确定要删除吗？',
+					cancelText: '是',
+					confirmText: '否',
 					success: res => {
 						if (res.confirm) {
 							this.imgList.splice(e.currentTarget.dataset.index, 1)
@@ -106,6 +111,29 @@
 			},
 			textareaInput(e) {
 				this.textareaAValue = e.detail.value
+			},
+			
+			refer(){
+				let data={};
+				data.title=this.title;
+				data.linkImage=this.imgList;
+				data.detail.source=this.source;
+				data.detail.content=this.content;
+				
+				
+				// 会员投稿
+				this.$H.post('/cms/article/addEntity', data, {
+					token: true,
+					header:{
+						'Content-Type':"application/json;charset=utf-8"
+					},
+					
+				}).then(res => {
+					console.log('会员投稿', res);
+					if (res.code == 1) {
+						this.dataList=res.data;
+					}
+				})
 			},
 			
 		}
